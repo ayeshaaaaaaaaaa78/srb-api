@@ -1,0 +1,14 @@
+query StudentDashboard($regNo: String!) {
+  student(regNo: $regNo) {
+    regNo
+    name
+    email
+    bookings {
+      id
+      slotId
+      roomName
+      date
+      startHour
+    }
+  }
+}
