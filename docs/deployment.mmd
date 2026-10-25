@@ -1,0 +1,4 @@
+flowchart LR
+  B[Browser / Postman] -->|HTTP REST or GraphQL| E[Express + Apollo Server]
+  B <-->|Socket.IO| E
+  E <-->|Mongoose queries| M[(MongoDB)]

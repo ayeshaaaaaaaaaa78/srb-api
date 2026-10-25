@@ -1,0 +1,17 @@
+sequenceDiagram
+  actor Student
+  participant API as Express API
+  participant DB as MongoDB
+  Student->>API: POST booking (slotId)
+  API->>DB: Find student and slot
+  API->>DB: Check existing booking
+  API->>DB: Atomic increment if booked < seats
+  alt seat available
+    DB-->>API: Updated slot
+    API->>DB: Insert booking
+    API-->>Student: 201 Created
+    API-->>Student: Socket update to room boards
+  else slot full
+    DB-->>API: No slot updated
+    API-->>Student: 409 SLOT_FULL
+  end

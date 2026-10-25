@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const c = require('../controllers/roomController');
+const wrap = require('../middleware/asyncHandler');
+router.get('/', wrap(c.list));
+router.get('/:roomCode', wrap(c.get));
+router.post('/', wrap(c.create));
+router.put('/:roomCode', wrap(c.replace));
+router.patch('/:roomCode', wrap(c.patch));
+router.delete('/:roomCode', wrap(c.remove));
+module.exports = router;

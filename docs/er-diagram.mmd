@@ -1,0 +1,28 @@
+erDiagram
+  ROOM ||--o{ SLOT : contains
+  STUDENT ||--o{ BOOKING : makes
+  SLOT ||--o{ BOOKING : receives
+  ROOM {
+    string roomCode PK
+    string name
+    string building
+    int seats
+  }
+  SLOT {
+    string _id PK
+    string roomCode FK
+    string date
+    int startHour
+    int seats
+    int booked
+  }
+  STUDENT {
+    string regNo PK
+    string name
+    string email
+  }
+  BOOKING {
+    string _id PK
+    string regNo FK
+    string slotId FK
+  }

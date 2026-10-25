@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "Study Room Booking Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "slotId",
+      "value": "REPLACE_WITH_SLOT_OBJECT_ID"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Create room",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"roomCode\":\"ROOM-10\",\"name\":\"Study Room\",\"building\":\"Block A\",\"seats\":5}"
+        },
+        "url": "{{baseUrl}}/api/v1/rooms"
+      }
+    },
+    {
+      "name": "List rooms",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/rooms"
+      }
+    },
+    {
+      "name": "Get room",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/rooms/ROOM-01"
+      }
+    },
+    {
+      "name": "Invalid room",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/rooms/NO-SUCH-ROOM"
+      }
+    },
+    {
+      "name": "Create slot",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"roomCode\":\"ROOM-01\",\"date\":\"2026-12-01\",\"startHour\":10}"
+        },
+        "url": "{{baseUrl}}/api/v1/slots"
+      }
+    },
+    {
+      "name": "List available slots",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/slots?roomCode=ROOM-01&hasSeats=true&page=1&limit=10"
+      }
+    },
+    {
+      "name": "Get slot",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/slots/{{slotId}}"
+      }
+    },
+    {
+      "name": "Create student",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"regNo\":\"FA23-BAI-009\",\"name\":\"Ayesha Khizer\",\"email\":\"ayesha@example.com\"}"
+        },
+        "url": "{{baseUrl}}/api/v1/students"
+      }
+    },
+    {
+      "name": "Get student",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/students/FA23-BAI-009"
+      }
+    },
+    {
+      "name": "Book slot",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"slotId\":\"{{slotId}}\"}"
+        },
+        "url": "{{baseUrl}}/api/v1/students/FA23-BAI-009/bookings"
+      }
+    },
+    {
+      "name": "List student bookings",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/students/FA23-BAI-009/bookings"
+      }
+    },
+    {
+      "name": "Cancel booking",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/v1/students/FA23-BAI-009/bookings/{{slotId}}"
+      }
+    },
+    {
+      "name": "GraphQL dashboard",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"query\":\"query { student(regNo: \\\"FA23-BAI-009\\\") { regNo name email bookings { roomName date startHour } } }\"}"
+        },
+        "url": "{{baseUrl}}/graphql"
+      }
+    }
+  ]
+}

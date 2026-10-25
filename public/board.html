@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Room Slot Board</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:850px;margin:2rem auto;padding:0 1rem;color:#222}
+input,button{padding:.6rem;margin:.25rem}table{border-collapse:collapse;width:100%;margin-top:1rem}
+th,td{border:1px solid #bbb;padding:.65rem;text-align:left}#status{font-weight:bold}#announcement{padding:.7rem;background:#f2f2f2}
+</style>
+</head>
+<body>
+<h1>Study Room Slot Board</h1>
+<label for="roomCode">Room code:</label><input id="roomCode" value="ROOM-01">
+<button id="join">Load room</button>
+<p>Connection: <span id="status">Connecting…</span></p>
+<p id="announcement" aria-live="polite"></p>
+<table><thead><tr><th>Date</th><th>Start hour</th><th>Seats left</th></tr></thead><tbody id="slots"></tbody></table>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const status = document.getElementById('status');
+const body = document.getElementById('slots');
+const announcement = document.getElementById('announcement');
+let currentRoom = 'ROOM-01';
+function render(slots) {
+  body.replaceChildren();
+  slots.forEach(s => {
+    const tr = document.createElement('tr');
+    [s.date, `${s.startHour}:00`, s.seatsLeft].forEach(value => {
+      const td = document.createElement('td'); td.textContent = String(value); tr.appendChild(td);
+    });
+    tr.dataset.slotId = s.slotId; body.appendChild(tr);
+  });
+}
+function joinRoom() {
+  currentRoom = document.getElementById('roomCode').value.trim().toUpperCase();
+  socket.emit('join:room', currentRoom, result => {
+    if (result && result.error) { announcement.textContent = result.error; return; }
+    render(result.slots || []);
+  });
+}
+socket.on('connect', () => { status.textContent = 'Connected'; joinRoom(); });
+socket.on('disconnect', () => { status.textContent = 'Disconnected'; });
+socket.on('slot:updated', update => {
+  const row = [...body.querySelectorAll('tr')].find(tr => tr.dataset.slotId === update.slotId);
+  if (row) row.cells[2].textContent = String(update.seatsLeft);
+});
+socket.on('admin:announcement', data => { announcement.textContent = data.message || ''; });
+document.getElementById('join').addEventListener('click', joinRoom);
+</script>
+</body></html>
